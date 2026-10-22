@@ -21,7 +21,8 @@ Trang web thiệp cưới online **100% tĩnh** (HTML / CSS / JS), tự chứa, 
 | `js/am-lich.js` | Thuật toán âm lịch tự viết (không phụ thuộc CDN) |
 | `js/qr.js` | Bản đồ Google Maps, mã QR ngân hàng, nút chỉ đường |
 | `images/` | Toàn bộ ảnh (37 ảnh) — xem `images/DOC-ANH.md` để biết ảnh nào dùng ở đâu |
-| `dong-goi/` | 4 file thiệp **tự chứa** (nhúng ảnh base64) để gửi qua Zalo |
+| `dong-goi/` | 5 file thiệp **tự chứa** (nhúng ảnh base64) để gửi qua Zalo |
+| `tools/build-dong-goi.py` | Script build lại các tông màu (thêm/sửa tông) |
 
 ---
 
@@ -35,13 +36,14 @@ Trang web thiệp cưới online **100% tĩnh** (HTML / CSS / JS), tự chứa, 
 - Google Maps 2 nhà + nút chỉ đường + **mã QR** + số tài khoản
 - **RSVP**: xác nhận tham dự (cô dâu / chú rể / cả 2) + lời chúc
 - Tạo link riêng theo tên khách: `index.html?ten=<tên>`
-- Chọn **4 tông màu** khi tạo link thiệp
+- Chọn **5 tông màu** khi tạo link thiệp
 
-### 🎨 4 tông màu
+### 🎨 5 tông màu
 
 | Tông | File |
 |---|---|
 | Xanh non + trắng (bản chính) | `index.html` / `dong-goi/thiep-pastel.html` |
+| Hồng pastel + kem | `dong-goi/thiep-hong.html` |
 | Trung tính kem – be | `dong-goi/thiep-trung-tinh.html` |
 | Truyền thống đỏ – vàng | `dong-goi/thiep-truyen-thong.html` |
 | Mộc rustic nâu đất | `dong-goi/thiep-moc-rustic.html` |
@@ -71,6 +73,26 @@ Muốn xem trên điện thoại: nhấn `F12` → chọn device **iPhone** đ�
 | Ảnh | Thả ảnh mới **cùng tên** vào đúng thư mục trong `images/` (xem `images/DOC-ANH.md`) |
 | Mật khẩu trang tạo link | `tao-thiep.html` → dòng `var TC_ADMIN = { tk: '1', mk: '1' }` |
 | Giao diện / màu sắc | `assets/css/style.css` |
+
+### 🎨 Thêm / sửa một tông màu mới
+
+Các file trong `dong-goi/` chỉ khác nhau ở **3 chỗ**: `<title>`, khối `:root` (bảng màu), và
+hex màu tim trong `url SVG` (`stroke='%23xxxxxx'` = `--pink-deep` của tông).
+
+Dùng script có sẵn — **không cần build lại ảnh**:
+
+```bash
+python tools/build-dong-goi.py hong          # build tông "hong" (tông hồng)
+python tools/build-dong-goi.py               # build tất cả các tông
+python tools/build-dong-goi.py --check       # chỉ kiểm tra, không ghi file
+```
+
+Muốn thêm tông mới: mở `tools/build-dong-goi.py`, thêm 1 mục vào `THEMES`
+(bảng màu `:root` + `title` + `file`), chạy script, rồi thêm `<option>` tương ứng
+vào `tao-thiep.html`.
+
+> Nếu đã sửa nội dung trong `index.html` / `js/` / `assets/` và muốn đồng bộ lại cả
+> 5 tông, dùng `--from-source` (dựng lại từ `index.html` + `assets/` + `js/`).
 
 ---
 

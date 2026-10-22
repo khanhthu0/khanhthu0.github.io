@@ -16,5 +16,8 @@ desktop.ini
 __pycache__/
 *.pyc
 
+# Cache build (sinh lai tu dong bang tools/build-dong-goi.py)
+tools/img-cache.json
+
 # Node
 node_modules/
