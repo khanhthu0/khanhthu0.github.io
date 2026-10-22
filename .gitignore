@@ -1,0 +1,20 @@
+# File ghi chu tam / ban sao khong dung de deploy
+New Text Document.txt
+New Text Document (2).txt
+
+# He dieu hanh
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/

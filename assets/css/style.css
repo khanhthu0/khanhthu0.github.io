@@ -1,0 +1,918 @@
+/* ═══════════ THIỆP CƯỚI — KHÁNH & THƯ ═══════════
+   Phong cách: XANH NON + TRẮNG (kh155 mục 5 — Đại Ka: "thay đổi phong màu là màu
+   xanh non, như kiểu phông thiệp cưới hiện tại thường đang có màu xanh lá non + trắng"),
+   chữ vạn tuế, hoa lá — theo video mẫu. Mobile-first (video 1350×2400).
+   Lịch sử: pastel hồng/kem (kh106→kh154) → XANH NON + TRẮNG từ kh155. */
+
+:root {
+  --cream: #f4f9f0;          /* nền kem → trắng xanh non rất nhạt */
+  --pink: #b9ddab;           /* accent hồng pastel → XANH NON nhạt (viền, nền nhấn) */
+  --pink-deep: #5c9e46;      /* hồng đậm → XANH LÁ NON đậm (tiêu đề, nút, tim) */
+  --green: #7a9e7e;          /* xanh phụ (âm lịch) — giữ tông lá */
+  --text: #3d4a35;          /* nâu chữ → XANH RÊU ĐẬM dễ đọc trên nền trắng xanh */
+  --gold: #a8c286;           /* vàng đồng → XANH NON-vàng nhẹ (chữ kiểu, viền) */
+  --white: #ffffff;
+  /* biến hoá chỗ màu cố định lệch tông (kh126 → kh155 đổi theo tông xanh non) */
+  --envelope-grad: #d8eecb;   /* gradient đuôi nắp phong bì — nhạt hơn --pink 1 tông */
+  --cal-sunday: #4f8a3d;      /* chữ Chủ Nhật lịch — xanh non đậm */
+  --wedding-lunar: #eaf5df;   /* nhãn âm ô ngày cưới — nền xanh non nhạt */
+  --btn-hover: #4a8039;       /* hover nút RSVP — đậm hơn --pink-deep */
+  --card-bg: rgba(255, 255, 255, .92);  /* nền card kính mờ (trang đầu) — trắng đậm hơn trên nền xanh */
+  --map-bg: #eef5e6;                   /* nền khung bản đồ sự kiện — xanh non rất nhạt */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Be Vietnam Pro', -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--cream);
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+
+.script { font-family: 'Great Vibes', cursive; }
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  text-align: center;
+  font-size: 24px;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+  color: var(--pink-deep);
+  text-transform: uppercase;
+}
+
+.hidden { display: none !important; }
+
+/* ═══════════ 1. COVER ═══════════ */
+#cover {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: opacity 1.2s ease, visibility 1.2s;
+}
+.cover-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(255,255,255,.85), rgba(255,252,250,.9)), url('../../images/nen/nen-phong-bi.jpg') center -63px/cover no-repeat;
+  /* MOBILE (mặc định — #0 đích thân 21-10): `center -30px` = ngang giữa + DỌC LÊN 30px.
+     FIX GỐC (điều tra 20-10, #0 bàn giao + kh155): ảnh nen-phong-bi.jpg vốn là ảnh DỌC
+     (cặp đôi làm trái tim) nhưng file lưu pixel NGANG 1600×1066 kèm thẻ EXIF
+     Orientation=8 → CSS background + cover cắt/đẩy theo chiều ngang làm trái tim
+     KHÔNG vào giữa. Các lần sửa trước (kh148 72% → kh151 80%) chỉ "dịch" cửa sổ
+     chứ không chữa gốc. Đã xuất lại ảnh đúng chiều DỌC + xoá thẻ Orientation (như
+     kh149), rồi kh155 crop theo chỉ dẫn #0 (bỏ ~1/5 nền trắng bên phải để VAI CÔ DÂU
+     SÁT MÉP PHẢI thiệp + cắt đỉnh trắng) → ảnh hẹp lại CÓ DƯ DỌC → position dọc
+     `top` đẩy 2 KHUÔN MẶT LÊN TRÊN chữ "THIỆP MỜI CƯỚI" (yêu cầu Đại Ka 20:01).
+     kh158 (20:57, ĐỔI HƯỚNG của Đại Ka): "hình nền... DỊCH 45px SANG BÊN TRÁI" —
+     crop THÊM 45px bên phải (860→815) = ảnh dịch trái 45px so vị trí kh155 chốt,
+     KHÔNG lộ khoảng trống (dùng crop thay background-position % — đúng kỹ thuật #0).
+     kh158 BỔ SUNG #5 (22:5x, CHỐT CUỐI — Đại Ka làm rõ, thay "lên 200px" của
+     BỔ SUNG 22:4x đã bỏ): bản MOBILE dịch trái THÊM 45px (tổng 90px so kh155 —
+     crop phải 815→770) + XUỐNG DƯỚI 40px (CSS background-position Y +40px —
+     ảnh có dư dọc khi cover viewport mobile nên dịch xuống KHÔNG lộ trắng).
+     Bản PC (BỔ SUNG #2): căn RIÊNG màn rộng — xem rule @media (min-width: 768px). */
+}
+.cover-inner { position: relative; padding: 24px; max-width: 420px; width: 100%; }
+/* kh151(1) (Đại Ka: "phong bì hơi lệch sang phải, chỉnh lại như cũ"):
+   kh144(5) nới .envelope lên min(360px, 92vw) NHƯNG giữ .cover-inner padding 24px
+   (khung nội dung 327px tại 375px) → 345px > 327px tràn khung, margin:0 auto chỉ
+   cân theo khung hẹp → envelope lệch PHẢI 9px trên mobile (lề trái 24 / phải 6).
+   FIX: rút padding ngang .cover-inner trên mobile còn 12px (khung 351px > 345px)
+   → envelope lề đều 2 bên (375-345)/2 = 15px, CĂN GIỮA như bản kh144 Đại Ka duyệt.
+   (kh144 nới 360px giữ nguyên — KHÔNG thu phong bì.) */
+@media (max-width: 480px) {
+  .cover-inner { padding: 24px 12px; }
+}
+.cover-kieu {
+  font-size: 13px;
+  letter-spacing: 6px;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.cover-names {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.cover-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+}
+.cover-amp { color: var(--pink-deep); font-size: 22px; }
+.cover-date {
+  font-size: 15px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  margin: 8px 0 18px;
+}
+
+/* ─── Phong bì (kh118 → kh129 → kh144(5)): trái tim = NÚT MỞ THIỆP + chữ cong quanh tim;
+     kh144(5): RỘNG HƠN (360px) + cao hơn, bấm TOÀN BỘ khu vực phong bì đều mở thiệp ─── */
+.envelope {
+  position: relative;
+  width: min(360px, 92vw);
+  margin: 0 auto;
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow: 0 10px 30px rgba(90, 74, 66, .22);
+  overflow: hidden;
+  transition: transform 1s ease;
+  cursor: pointer;   /* kh144(5): toàn khu vực là vùng bấm mở thiệp */
+}
+/* Nắp phong bì — tam giác đáy, mở lên khi bấm trái tim */
+.env-flap {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 52%;
+  background: linear-gradient(180deg, var(--pink) 0%, var(--envelope-grad) 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transition: transform 1s ease;
+  z-index: 2;
+}
+/* Thân phong bì — trống: nội dung che sau khi nắp mở (kh144(5): cao hơn cho rộng) */
+.env-body {
+  position: relative;
+  height: 200px;
+  z-index: 1;
+}
+/* Chữ cong "Bấm vào đây để mở thiệp" — nửa vòng cung dưới ôm quanh trái tim (kh129 mục 2) */
+.env-curved {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%);
+  width: 240px;
+  height: 152px;
+  z-index: 3;
+  pointer-events: none;   /* không cản bấm trái tim */
+  filter: drop-shadow(0 1px 2px rgba(255,255,255,.85));
+}
+.env-curved-text textPath {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 13.5px;
+  letter-spacing: 2.5px;
+  fill: var(--gold);
+}
+.env-curved-arrow { fill: var(--gold); }
+/* Trái tim = nút bấm mở thiệp (kh129 mục 1 — thay nút "Mở thiệp" trên đỉnh) */
+.env-seal {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  line-height: 64px;
+  text-align: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--pink-deep);
+  color: var(--white);
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(92, 158, 70, .45);   /* kh155: hồng → XANH NON (tim phong bì) */
+  z-index: 4;
+  transition: opacity .5s ease;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+/* Hiệu ứng mở: nắp xoay mở + niêm phong mờ dần
+   (kh152: selector đổi #cover.opening → #cover.env-opening — class 'opening' cũ
+   trùng .opening của section trang đầu, gây padding co khung + dịch phải khi mở) */
+#cover.env-opening .env-flap { transform: rotateX(180deg); }
+#cover.env-opening .env-seal { opacity: 0; }
+#cover.env-opening .env-curved { opacity: 0; transition: opacity .4s ease; }
+.env-hint {
+  margin-top: 14px;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--text);
+  font-style: italic;
+  text-align: center;
+}
+.env-hint b { color: var(--pink-deep); font-size: 17px; font-style: normal; }
+/* kh155 mục 1: "Trân trọng kính mời" chuyển LÊN TRÊN thiệp (ngay dưới dòng ngày cưới,
+   TRƯỚC phong bì) — biến thể .env-hint-top: bỏ margin-top (thay bằng margin-bottom đẩy
+   phong bì xuống), chữ đậm hơn nổi trên nền ảnh */
+.env-hint-top {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+/* ═══════════ 2. TRANG ĐẦU (kh118) — khối kính mời sau khi mở, nền HOA ═══════════ */
+.opening {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  background:
+    linear-gradient(rgba(255,255,255,.72), rgba(255,252,250,.85)),
+    url('../../images/nen/nen-trang-dau.jpg') center/cover no-repeat;
+}
+.opening-card {
+  max-width: 560px;
+  width: 100%;
+  padding: 34px 22px;
+  text-align: center;
+  background: var(--card-bg);
+  border: 1px solid var(--pink);
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(90, 74, 66, .18);
+}
+.opening-kimoi {
+  font-size: 13px;
+  letter-spacing: 5px;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+/* kh139: dòng tên khách được mời "xxx" dưới TRÂN TRỌNG KÍNH MỜI */
+.opening-guest {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--pink-deep);
+  margin-bottom: 10px;
+}
+/* (kh144(1): dòng .opening-couple "Nông Quốc Khánh ♥ Đỗ Thị Thư" đã XOÁ theo
+   yêu cầu Đại Ka — style xoá theo; thứ tự trang đầu mới: script → ngày →
+   TRÂN TRỌNG KÍNH MỜI → tên khách → 2 khối lễ → lời ngỏ) */
+.opening-script {
+  font-size: 44px;
+  color: var(--pink-deep);
+  margin: 10px 0 6px;
+}
+.opening-date {
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--text);
+  background: var(--pink);
+  display: inline-block;
+  padding: 8px 22px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+/* kh138: dòng âm lịch dưới ngày dương — "14.10.2026 Âm lịch" */
+.opening-date-am {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--green);
+  margin-bottom: 16px;
+}
+.opening-venue {
+  padding-top: 14px;
+  border-top: 1px dashed var(--pink);
+}
+.ov-label {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--green);
+  margin-bottom: 6px;
+}
+.ov-addr { font-size: 15px; color: var(--text); line-height: 1.6; }
+/* kh139: 2 venue nhà trai + nhà gái xếp cách nhau */
+.opening-venue + .opening-venue { margin-top: 12px; }
+/* kh139: LỜI NGỎ — nguyên văn Đại Ka, itallic khối dưới 2 địa điểm */
+.opening-ngo {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--pink);
+  font-size: 13.5px;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--text);
+}
+.opening-ngo-sign {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--pink-deep);
+}
+
+/* ═══════════ MAIN + HERO ═══════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px 40px;
+  text-align: center;
+  position: relative;
+  background:
+    linear-gradient(rgba(255,255,255,0) 0%, rgba(255,252,250,.55) 62%, var(--cream) 100%),
+    url('../../images/nen/nen-hero.jpg') center/cover no-repeat;
+}
+/* Ảnh cặp đôi thật 1 tấm (kh121 — thay 2 hình áo dài; kh144(2): CHIỀU DỌC thay 3:2 ngang) */
+.hero-photo {
+  width: min(300px, 82vw);
+  margin: 0 auto 6px;
+  padding: 8px;
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(90, 74, 66, .3);
+  transform: rotate(-1.5deg);
+}
+.hero-photo img {
+  width: 100%;
+  aspect-ratio: 2/3;   /* kh144(2): dọc — Đại Ka: "sửa ảnh thành chiều dọc" */
+  object-fit: cover;
+  border-radius: 8px;
+}
+.hero-text { margin-top: 34px; }
+.hero-sub { font-size: 14px; letter-spacing: 2px; color: var(--green); }
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  letter-spacing: 8px;
+  color: var(--text);
+  margin: 10px 0 6px;
+  text-transform: uppercase;
+}
+.hero-names { font-size: 54px; color: var(--pink-deep); margin: 6px 0 14px; }
+.hero-date {
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--text);
+  background: var(--pink);
+  display: inline-block;
+  padding: 8px 22px;
+  border-radius: 999px;
+}
+
+/* ═══════════ COUNTDOWN ═══════════ */
+.countdown {
+  background: var(--white);
+  padding: 50px 20px;
+  text-align: center;
+}
+.countdown-when {
+  font-family: 'Playfair Display', serif;
+  font-size: 19px;
+  margin-bottom: 26px;
+  color: var(--text);
+  letter-spacing: 2px;
+}
+.countdown-row {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.cd-cell {
+  min-width: 74px;
+  padding: 14px 10px;
+  border: 1px solid var(--pink);
+  border-radius: 12px;
+  background: var(--cream);
+}
+.cd-cell b {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  color: var(--pink-deep);
+}
+.cd-cell span {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+
+/* ═══════════ 5. LỊCH THÁNG CƯỚI (kh119) ═══════════ */
+.calendar { padding: 50px 20px 60px; background: var(--white); }
+.cal-wrap {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 20px 16px 16px;
+  border: 1px solid var(--pink);
+  border-radius: 18px;
+  background: var(--cream);
+  box-shadow: 0 8px 26px rgba(90, 74, 66, .1);
+}
+.cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.cal-month { text-align: center; line-height: 1.4; }
+.cal-month b {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+.cal-month span { font-size: 12px; color: var(--green); font-style: italic; }
+.cal-nav {
+  width: 34px; height: 34px;
+  border: 1px solid var(--pink);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--pink-deep);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.cal-nav:active { background: var(--pink); }
+.cal-weeknames {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+.cal-weeknames span {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--gold);
+  text-align: center;
+  padding: 4px 0;
+}
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.cal-cell {
+  position: relative;
+  min-height: 46px;
+  padding: 5px 2px 2px;
+  border-radius: 8px;
+  background: var(--white);
+  text-align: center;
+  font-size: 13px;
+  color: var(--text);
+}
+.cal-cell.blank { background: transparent; }
+/* kh155 mục 3: tim nhô -14px trên đầu ô — đảm bảo ô hàng trên KHÔNG đè lên tim
+   (z-index + ô thường trong suốt nền trắng không che) */
+.cal-cell.wedding { z-index: 2; }
+.cal-cell .lunar {
+  display: block;
+  font-size: 9.5px;
+  color: var(--green);
+  line-height: 1.2;
+}
+.cal-cell.sat { color: var(--pink-deep); }
+.cal-cell.sun { color: var(--cal-sunday); }
+.cal-cell.today { outline: 1.5px dashed var(--gold); }
+/* Ngày cưới — KHOANH VÙNG TRÁI TIM ĐỎ (a2 mục 5; kh140 mục 3: tim TO + CHỈ VIỀN,
+   bỏ tô nền hồng ô) */
+.cal-cell.wedding {
+  background: transparent;
+  color: var(--pink-deep);
+}
+.cal-cell.wedding .lunar { color: var(--green); }
+/* kh155 mục 3 — Đại Ka: "trái tim khoanh ở hình lịch dịch lên trên tý. lên vẫn đang
+   khe khuất vào số ngày. co lên hẳn để k che vào ngày 22" → kh157 (21:14, #0 bàn giao)
+   ĐỔI CÁCH: tim = VIỀN/khoanh hình trái tim LỚN ÔM TRỌN số 22 (không còn badge nhỏ) —
+   tim TO HƠN khung ô (inset âm chờm ra ngoài 4 phía), số 22 hiện RÕ trong lòng tim,
+   MÀU TIM theo biến tông (var(--pink-deep) — không hardcode đỏ, khớp 4 tông). */
+.cal-cell.wedding .dnum {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+/* kh157: tim VIỀN SVG (đường vector) thay glyph ❤ — render ĐỀU MỌI môi trường (emoji
+   font mỗi máy vẽ khác nhau + color emoji bỏ qua text-stroke). Tim LỚN ÔM TRỌN ô 22,
+   lòng tim TRONG SUỐT → số 22 hiện rõ BÊN TRONG; chờm ra ngoài khung ô (inset âm).
+   MÀU TIM THEO TÔNG (kh157 mục 2): url SVG chứa hex %235c9e46 (xanh non index chính)
+   — build script dong-goi REPLACE hex này theo --pink-deep của TỪNG tông khi build
+   (cùng cơ chế css_vars đã có), KHÔNG hardcode 1 màu đỏ. */
+.cal-cell.wedding::after {
+  content: '';
+  position: absolute;
+  inset: -11px -9px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 104'><path d='M50 96 C22 76 4 58 4 34 C4 16 18 4 33 4 C42 4 48 9 50 15 C52 9 58 4 67 4 C82 4 96 16 96 34 C96 58 78 76 50 96 Z' fill='none' stroke='%235c9e46' stroke-width='7' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+  pointer-events: none;
+  z-index: 1;
+}
+/* kh157 mục 1: số 22 hiện RÕ trong lòng tim — nhãn âm đẩy xuống đáy ô tránh đè viền tim */
+.cal-cell.wedding .lunar { position: relative; z-index: 2; }
+/* kh155: nhãn âm ô cưới trở lại cỡ bình thường (tim đã nhô lên, không còn che) */
+.cal-cell.wedding .lunar {
+  font-size: 9.5px;
+  opacity: 1;
+}
+.cal-note {
+  margin-top: 12px;
+  font-size: 12.5px;
+  text-align: center;
+  color: var(--text);
+  font-style: italic;
+}
+
+/* (kh140 mục 8: thanh đếm ngược rìa #edgeCountdown đã BỎ — style xoá theo) */
+
+/* ═══════════ CẶP ĐÔI ═══════════ */
+.couple { padding: 50px 20px; text-align: center; }
+/* kh144(3): ảnh NHỎ HƠN + mobile 2 ảnh NGANG HÀNG như PC — grid 2 cột,
+   tim CHỒNG GIỮA 2 card (mobile cũ flex-wrap dồn tim → 2 card rơi xuống
+   thành TRÊN-DƯỚI đúng lỗi Đại Ka báo) */
+.couple-cards {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.couple-card {
+  padding: 12px;
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(90, 74, 66, .12);
+}
+.couple-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.couple-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.couple-birth { font-size: 12px; color: var(--green); margin-bottom: 2px; }
+.couple-role {
+  font-size: 12px;
+  color: var(--pink-deep);
+  font-style: italic;
+}
+/* Tim chồng giữa 2 card — vòng tròn trắng để nổi trên khe hở */
+.couple-heart {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  line-height: 38px;
+  text-align: center;
+  font-size: 22px;
+  color: var(--pink-deep);
+  background: var(--white);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(90, 74, 66, .2);
+  z-index: 1;
+}
+
+/* ═══════════ SỰ KIỆN ═══════════ */
+.events { padding: 50px 20px; background: var(--white); }
+.event-card {
+  max-width: 380px;
+  margin: 0 auto 26px;
+  padding: 18px;
+  border: 1px solid var(--pink);
+  border-radius: 16px;
+  background: var(--cream);
+  text-align: center;
+}
+.event-head {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--pink-deep);
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+.event-img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+.event-card p { font-size: 14px; line-height: 1.6; margin-bottom: 4px; }
+.event-host {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.event-map {
+  margin: 4px 0 10px;
+  border: 1px solid var(--pink);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--map-bg);
+}
+.event-map iframe {
+  display: block;
+  width: 100%;
+  height: 180px;
+  border: 0;
+}
+.map-btns {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.map-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 9px 26px;
+  border-radius: 999px;
+  background: var(--green);
+  color: var(--white);
+  text-decoration: none;
+  font-size: 13px;
+}
+.map-btn-outline {
+  background: transparent;
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+
+/* ═══════════ GALLERY ═══════════ */
+.gallery { padding: 50px 20px; }
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.gallery-grid img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: 10px;
+}
+/* (kh140 mục 10: dòng "— Khoảnh khắc của chúng tôi —" đã BỎ — style xoá theo) */
+/* Nút Xem thêm khoảnh khắc (kh120) */
+.gallery-more-wrap { text-align: center; margin-top: 16px; }
+.gallery-more-btn {
+  padding: 10px 26px;
+  border: 1px solid var(--pink-deep);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pink-deep);
+  font-family: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.gallery-more-btn:hover { background: var(--pink-deep); color: var(--white); }
+.gallery-grid.more { margin-top: 14px; }
+
+/* ═══════════ LIGHTBOX — zoom ảnh gallery (kh120) ═══════════ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+/* [hidden] phải thắng display:flex của .lightbox (hidden attribute yếu hơn class) */
+.lightbox[hidden] { display: none !important; }
+.lb-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(42, 32, 28, .92);
+  cursor: pointer;
+}
+.lb-img {
+  position: relative;
+  z-index: 2;
+  max-width: 100%;
+  max-height: 82vh;
+  border-radius: 10px;
+  box-shadow: 0 16px 60px rgba(0, 0, 0, .5);
+  cursor: zoom-in;
+  transition: transform .35s ease;
+}
+.lb-img.zoomed {
+  transform: scale(2);
+  cursor: zoom-out;
+}
+.lb-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .18);
+  color: var(--white);
+  font-size: 18px;
+  cursor: pointer;
+}
+.lb-close:active { background: var(--pink-deep); }
+.lb-hint {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, .65);
+  letter-spacing: .5px;
+}
+
+/* ═══════════ QR MỪNG CƯỚI ═══════════ */
+.qr { padding: 50px 20px; background: var(--white); text-align: center; }
+.qr-intro { font-size: 14px; margin-bottom: 26px; line-height: 1.6; }
+.qr-cards {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.qr-card {
+  width: 178px;   /* kh155 mục 4(a): nới card 150→178px chứa STK to 17px không tràn khung */
+  padding: 16px;
+  border: 1px solid var(--pink);
+  border-radius: 16px;
+  background: var(--cream);
+}
+.qr-card h3 {
+  font-size: 15px;
+  color: var(--pink-deep);
+  margin-bottom: 10px;
+}
+.qr-img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  margin-bottom: 12px;
+}
+.qr-card p { font-size: 12px; line-height: 1.7; }
+/* kh155 mục 4(a) — Đại Ka: "cho số tài khoản to hơn": span số TK (qrStk1/qrStk2) phóng to
+   + đậm + mono dễ đọc/sao chép; áp cả index lẫn 5 file dong-goi (cùng nguồn style.css). */
+.qr-card p span[id^="qrStk"] {
+  font-size: 17px;
+  font-weight: 700;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: .5px;
+  color: var(--text);
+}
+.qr-copy-btn {
+  margin-top: 10px;
+  padding: 7px 16px;
+  border: 1px solid var(--pink-deep);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pink-deep);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.qr-copy-btn:hover { background: var(--pink-deep); color: var(--white); }
+
+/* ═══════════ RSVP ═══════════ */
+.rsvp { padding: 50px 20px; text-align: center; }
+.rsvp-intro { font-size: 14px; margin-bottom: 24px; font-style: italic; }
+#rsvpForm {
+  max-width: 380px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+#rsvpForm input[type="text"],
+#rsvpForm textarea {
+  padding: 12px 16px;
+  border: 1px solid var(--pink);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--white);
+  color: var(--text);
+  resize: vertical;
+}
+#rsvpForm input:focus, #rsvpForm textarea:focus {
+  outline: 2px solid var(--pink-deep);
+  border-color: transparent;
+}
+.rsvp-attend {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  font-size: 14px;
+}
+/* Lựa chọn "Khách mời của" (kh120) — hiện dưới tên người xác nhận */
+.rsvp-side {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px dashed var(--pink);
+  border-radius: 10px;
+  background: var(--white);
+}
+.rsvp-side-label { font-size: 13px; color: var(--text); font-weight: 600; }
+.rsvp-side-opts {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 13.5px;
+  flex-wrap: wrap;
+}
+.rsvp-side-opts label { cursor: pointer; }
+#rsvpForm button {
+  padding: 12px;
+  border: none;
+  border-radius: 999px;
+  background: var(--pink-deep);
+  color: var(--white);
+  font-size: 15px;
+  font-family: inherit;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+#rsvpForm button:hover { background: var(--btn-hover); }
+.wish-list { max-width: 380px; margin: 24px auto 0; text-align: left; }
+.wish-item {
+  padding: 10px 14px;
+  border-bottom: 1px dashed var(--pink);
+  font-size: 13px;
+}
+.wish-item b { color: var(--pink-deep); display: block; margin-bottom: 3px; }
+.wish-item .wish-side {
+  display: block;
+  font-size: 12px;
+  color: var(--green);
+  font-style: italic;
+  margin-bottom: 3px;
+}
+/* kh140 mục 9: nút "Xem thêm lời chúc" — tái dùng style nút gallery */
+.wish-more-wrap { text-align: center; margin-top: 14px; }
+
+/* ═══════════ FOOTER ═══════════ */
+.footer {
+  padding: 60px 20px 50px;
+  text-align: center;
+  background:
+    linear-gradient(rgba(253, 248, 243, .88), rgba(253, 248, 243, 1)),
+    url('../../images/gallery/le-ta-on.jpg') center/cover no-repeat;
+}
+.footer-thanks {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.footer-names { font-size: 42px; color: var(--pink-deep); margin-bottom: 8px; }
+.footer-note { font-size: 14px; letter-spacing: 3px; color: var(--gold); }
+
+/* ═══════════ REVEAL ANIMATION ═══════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .9s ease, transform .9s ease;
+}
+.reveal.in { opacity: 1; transform: none; }
+
+/* ═══════════ PC ≥768px ═══════════ */
+@media (min-width: 768px) {
+  .sec-title { font-size: 30px; }
+  .cover-name { font-size: 34px; }
+  .opening-kimoi { font-size: 15px; }   /* kh144(4): kimoi xuống dưới ngày — nhấn hơn chút */
+  .opening-script { font-size: 58px; }
+  .opening-card { padding: 44px 30px; }
+  .hero-title { font-size: 30px; }
+  .hero-names { font-size: 72px; }
+  .hero-photo { width: 360px; }   /* kh144(2): dọc — cao vừa màn PC, không tràn */
+  .couple-cards { max-width: 500px; gap: 26px; }
+  .couple-card { padding: 16px; }
+  .couple-card img { border-radius: 12px; }
+  .couple-heart { width: 48px; height: 48px; line-height: 46px; font-size: 26px; }
+  .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+  .qr-card { width: 240px; }
+  .event-map iframe { height: 240px; }
+  /* kh158 BỔ SUNG #5 + BỔ SUNG #2: PC màn RỘNG căn RIÊNG (không dùng số mobile).
+     Ảnh crop dọc kh158-bs5 770×1570 (dịch trái tổng 90px so kh155 — Đại Ka BỔ SUNG
+     #5 mobile; PC giữ crop này). Trên PC viewport cao (800px) ảnh dọc cover vẫn dư
+     dọc nhiều → position `center top` GIỮ khuôn mặt CAO (trên chữ THIỆP MỜI CƯỚI —
+     yêu cầu kh155 bổ sung 20:01) + cặp đôi lệch trái 90px cân cho khung phong bì
+     giữa màn rộng. KHÔNG áp "xuống 40px" của mobile (đó là chỉnh riêng 375px). */
+  .cover-bg { background: linear-gradient(rgba(255,255,255,.85), rgba(255,252,250,.9)), url('../../images/nen/nen-phong-bi-pc.jpg') center/cover no-repeat; }
+}

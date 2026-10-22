@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tạo link thiệp — Khánh & Thư</title>
+<meta name="description" content="Trang quản trị: điền tên người được mời → tạo link thiệp cưới kèm tên để gửi qua Zalo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Great+Vibes&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── Trang TẠO LINK THIỆP (kh130) — self-contained, tái dùng bảng màu thiệp ───
+   Lưu ý: web tĩnh, login client-side (sessionStorage) — demo, KHÔNG phải bảo mật thật.
+   Muốn đổi mật khẩu admin → sửa hằng TC_ADMIN ở đầu <script> bên dưới. */
+:root {
+  --cream: #f4f9f0; --pink: #b9ddab; --pink-deep: #5c9e46;
+  --green: #7a9e7e; --text: #3d4a35; --gold: #c5a572; --white: #fff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  color: var(--text);
+  background: linear-gradient(rgba(255,255,255,.85), rgba(255,252,250,.9)), url('images/nen/nen-phong-bi-pc.jpg') center/cover no-repeat fixed;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.card {
+  width: min(420px, 100%);
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(90, 74, 66, .22);
+  padding: 28px 24px;
+  text-align: center;
+}
+.script { font-family: 'Great Vibes', cursive; }
+h1 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 4px; }
+.sub { font-size: 13px; color: var(--gold); letter-spacing: 2px; margin-bottom: 20px; }
+label { display: block; text-align: left; font-size: 13px; margin: 14px 0 6px; font-weight: 500; }
+input[type="text"], input[type="password"], select {
+  width: 100%; padding: 11px 12px; font-size: 15px; font-family: inherit;
+  border: 1.5px solid #e8ddd3; border-radius: 8px; outline: none;
+  transition: border-color .2s;
+}
+input:focus, select:focus { border-color: var(--pink-deep); }
+/* kh157: khối chọn phông màu + nhãn tông trên link kết quả */
+select { background: #fff; cursor: pointer; }
+.tong-mau-note { font-size: 12px; color: #9b8d84; text-align: left; margin-top: 6px; }
+.tong-hien { color: var(--gold); font-size: 12px; }
+button {
+  font-family: inherit; font-size: 15px; padding: 11px 18px;
+  border: none; border-radius: 999px; cursor: pointer;
+  background: var(--pink-deep); color: var(--white); letter-spacing: 1px;
+  margin-top: 18px;
+}
+button:hover { background: var(--btn-hover, #c97a7a); }
+.err { color: #c0392b; font-size: 13px; min-height: 18px; margin-top: 10px; }
+/* ── khu tạo link (hiện sau login) ── */
+.hidden { display: none !important; }
+.result {
+  margin-top: 18px; padding: 14px; background: var(--cream);
+  border: 1px dashed var(--gold); border-radius: 10px; text-align: left;
+}
+.result .link {
+  font-size: 13px; word-break: break-all; color: var(--text);
+  background: #fff; padding: 8px 10px; border-radius: 6px; margin: 6px 0 10px;
+}
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-row button { flex: 1; min-width: 130px; }
+.btn-ghost { background: transparent; border: 1.5px solid var(--pink-deep); color: var(--pink-deep); }
+.btn-ghost:hover { background: var(--pink); }
+.logout { font-size: 12px; margin-top: 16px; }
+.logout a { color: var(--gold); cursor: pointer; text-decoration: underline; }
+.hint-history { font-size: 12px; color: #9b8d84; margin-top: 14px; }
+ul.history { list-style: none; text-align: left; margin-top: 8px; }
+ul.history li {
+  font-size: 13px; padding: 7px 8px; border-bottom: 1px solid #f3ece4;
+  display: flex; justify-content: space-between; gap: 8px; align-items: center;
+}
+ul.history li b { color: var(--pink-deep); }
+ul.history button { margin: 0; padding: 4px 10px; font-size: 12px; }
+/* ── kh170 (Đại Ka): DANH SÁCH THIỆP MỜI — overlay modal + nút xoá có xác nhận ── */
+.ds-overlay {
+  position: fixed; inset: 0; background: rgba(90, 74, 66, .45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; z-index: 50;
+}
+.ds-card {
+  width: min(520px, 100%); max-height: 82vh; overflow: auto;
+  background: var(--white); border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(90, 74, 66, .3);
+  padding: 20px 16px; text-align: left;
+}
+.ds-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.ds-head h2 { font-family: 'Playfair Display', serif; font-size: 18px; }
+.ds-head button { margin: 0; padding: 6px 12px; font-size: 12px; background: transparent; border: 1.5px solid #e8ddd3; }
+.ds-head button:hover { background: var(--cream); }
+.ds-item { border: 1px solid #f3ece4; border-radius: 10px; padding: 10px; margin-bottom: 10px; }
+.ds-item .ds-ten { font-weight: 600; color: var(--pink-deep); }
+.ds-item .ds-tong { color: var(--gold); font-size: 12px; margin-left: 6px; }
+.ds-item .ds-link {
+  font-size: 12px; word-break: break-all; background: var(--cream);
+  padding: 6px 8px; border-radius: 6px; margin: 6px 0; color: var(--text);
+}
+.ds-btns { display: flex; gap: 8px; }
+.ds-btns button { margin: 0; padding: 6px 12px; font-size: 12px; flex: 1; min-width: 0; }
+.ds-btns .btn-xoa { background: #c0392b; }
+.ds-btns .btn-xoa:hover { background: #a93226; }
+.ds-btns .btn-huy { background: transparent; border: 1.5px solid var(--pink-deep); color: var(--pink-deep); }
+.ds-btns .btn-huy:hover { background: var(--pink); }
+.ds-confirm { margin-top: 8px; }
+.ds-confirm-text { font-size: 13px; color: #c0392b; font-weight: 500; margin-bottom: 6px; }
+.ds-empty { text-align: center; font-size: 13px; color: #9b8d84; padding: 18px 0; }
+.ds-note { font-size: 11px; color: #9b8d84; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="card" id="loginCard">
+  <h1>Trang quản trị</h1>
+  <p class="sub">TẠO LINK THIỆP CƯỚI</p>
+  <label for="tk">Tài khoản</label>
+  <input type="text" id="tk" autocomplete="username">
+  <label for="mk">Mật khẩu</label>
+  <input type="password" id="mk" autocomplete="current-password">
+  <button id="btnLogin" type="button">Đăng nhập</button>
+  <p class="err" id="loginErr"></p>
+  <p class="hint-history">* Web tĩnh — đăng nhập client-side (demo), không phải bảo mật thật.</p>
+</div>
+
+<div class="card hidden" id="mainCard">
+  <h1>Tạo link thiệp</h1>
+  <p class="sub script">Nông Quốc Khánh ♥ Đỗ Thị Thư</p>
+  <label for="tenKhach">Tên người được mời</label>
+  <input type="text" id="tenKhach" placeholder="vd: Nguyễn Văn A" maxlength="60">
+
+  <!-- kh157 bổ sung 21:1x (Đại Ka): THÊM tuỳ chọn PHÔNG MÀU (tông thiệp) khi tạo link.
+       4 tông đúng file dong-goi build: pastel (bản hiện hành) / trung tính / truyền thống / mộc rustic.
+       Link sinh ra trỏ đúng bản tông đã chọn + kèm ?ten= tên khách. Tông mặc định = pastel. -->
+  <label for="tongMau">Phông màu thiệp</label>
+  <select id="tongMau">
+    <option value="index" selected>🌸 Xanh non + trắng (bản chính)</option>
+    <option value="dong-goi/thiep-trung-tinh">🤍 Trung tính — kem/be</option>
+    <option value="dong-goi/thiep-truyen-thong">🏮 Truyền thống — đỏ + vàng</option>
+    <option value="dong-goi/thiep-moc-rustic">🪵 Mộc rustic — nâu đất</option>
+  </select>
+  <div class="tong-mau-note">Mỗi phông là 1 file thiệp riêng (đã đóng gói gửi Zalo được) — khách mở link thấy đúng tông đã chọn.</div>
+
+  <button id="btnTao" type="button">Tạo link thiệp</button>
+  <p class="err" id="taoErr"></p>
+
+  <!-- kh170 (Đại Ka): nút mở DANH SÁCH THIỆP MỜI — liệt kê tên + link từng khách, xoá có xác nhận -->
+  <button id="btnDanhSach" type="button" class="btn-ghost" style="width:100%">📋 Danh sách thiệp mời</button>
+
+  <div class="result hidden" id="resultBox">
+    <label>Link thiệp mời <b id="tenHien"></b> <span id="tongHien" class="tong-hien"></span>:</label>
+    <div class="link" id="linkOut"></div>
+    <div class="btn-row">
+      <button id="btnCopy" type="button">📋 Sao chép link</button>
+      <button id="btnOpen" type="button" class="btn-ghost">💌 Mở thử thiệp</button>
+    </div>
+  </div>
+
+  <ul class="history hidden" id="history"></ul>
+  <p class="logout"><a id="btnLogout">Đăng xuất</a></p>
+</div>
+
+<!-- kh170: overlay DANH SÁCH THIỆP MỜI (ẩn mặc định, JS render) -->
+<div class="ds-overlay hidden" id="dsOverlay">
+  <div class="ds-card" id="dsCard">
+    <div class="ds-head">
+      <h2>📋 Danh sách thiệp mời</h2>
+      <button id="dsClose" type="button">✕ Đóng</button>
+    </div>
+    <div id="dsList"></div>
+    <p class="ds-note">* Danh sách lưu trên máy này (localStorage — web tĩnh). Thiệp tạo trước khi có tính năng này không nằm trong danh sách.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  /* ═══ CƠ CHẾ LOGIN (web tĩnh — demo, KHÔNG bảo mật thật) ═══
+     Muốn ĐỔI tài khoản admin → sửa 2 dòng này (chỗ DUY NHẤT). */
+  var TC_ADMIN = { tk: '1', mk: '1' };
+  var SS_KEY = 'tc_admin_ok';
+
+  var loginCard = document.getElementById('loginCard');
+  var mainCard = document.getElementById('mainCard');
+
+  function showMain() { loginCard.classList.add('hidden'); mainCard.classList.remove('hidden'); }
+  function showLogin() { mainCard.classList.add('hidden'); loginCard.classList.remove('hidden'); }
+
+  function doLogin() {
+    var tk = document.getElementById('tk').value.trim();
+    var mk = document.getElementById('mk').value;
+    var err = document.getElementById('loginErr');
+    if (tk === TC_ADMIN.tk && mk === TC_ADMIN.mk) {
+      try { sessionStorage.setItem(SS_KEY, '1'); } catch (e) {}
+      err.textContent = '';
+      showMain();
+      document.getElementById('tenKhach').focus();
+    } else {
+      err.textContent = '⚠ Sai tài khoản hoặc mật khẩu — thử lại.';
+    }
+  }
+  document.getElementById('btnLogin').addEventListener('click', doLogin);
+  // Enter trong 2 ô input cũng đăng nhập
+  ['tk', 'mk'].forEach(function (id) {
+    document.getElementById(id).addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') doLogin();
+    });
+  });
+  document.getElementById('btnLogout').addEventListener('click', function () {
+    try { sessionStorage.removeItem(SS_KEY); } catch (e) {}
+    showLogin();
+  });
+
+  /* ── TẠO LINK: index.html?ten=<tên URL-encoded> (cơ chế ?ten= có sẵn kh106/kh112) ──
+     kh157 bổ sung 21:1x: link theo PHÔNG MÀU chọn — tông "index" = bản chính index.html,
+     3 tông khác = file dong-goi tương ứng (self-contained) + ?ten= tên khách. */
+  var HISTORY_KEY = 'tc_tao_link_history';
+
+  function baseUrl(page) {
+    // về trang thiệp cùng thư mục (phù chạy file:// hoặc http đều đúng)
+    return new URL(page || 'index.html', location.href.replace(/[?#].*$/, '')).href;
+  }
+  function chonTong() { return document.getElementById('tongMau').value; }
+  function tenTong(v) {
+    var opt = document.querySelector('#tongMau option[value="' + v + '"]');
+    return opt ? opt.textContent : v;
+  }
+
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
+    catch (e) { return []; }
+  }
+  function renderHistory() {
+    var ul = document.getElementById('history');
+    var arr = loadHistory();
+    if (!arr.length) { ul.classList.add('hidden'); ul.innerHTML = ''; return; }
+    ul.classList.remove('hidden');
+    ul.innerHTML = '';
+    arr.slice().reverse().forEach(function (ten) {
+      var li = document.createElement('li');
+      var b = document.createElement('b');
+      b.textContent = ten;
+      li.appendChild(b);
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = '📋';
+      btn.title = 'Sao chép lại link "' + ten + '"';
+      btn.addEventListener('click', function () {
+        copyLink(taoLink(ten, 'index'), btn);   // kh157: lịch sử chép lại link bản chính (tông mặc định)
+      });
+      li.appendChild(btn);
+      ul.appendChild(li);
+    });
+  }
+
+  function taoLink(ten, tong) {
+    // tông 'index' → index.html; tông khác = path file dong-goi (select value đã có .html)
+    var page = tong && tong !== 'index' ? tong + (tong.endsWith('.html') ? '' : '.html') : 'index.html';
+    return baseUrl(page) + '?ten=' + encodeURIComponent(ten);
+  }
+
+  function copyLink(url, btn) {
+    function done() {
+      var old = btn.textContent;
+      btn.textContent = '✓ Đã sao chép';
+      setTimeout(function () { btn.textContent = old; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done, function () { fallbackCopy(url, done); });
+    } else { fallbackCopy(url, done); }
+  }
+  function fallbackCopy(url, done) {
+    var ta = document.createElement('textarea');
+    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); done();
+  }
+
+  document.getElementById('btnTao').addEventListener('click', function () {
+    var ten = document.getElementById('tenKhach').value.trim();
+    var err = document.getElementById('taoErr');
+    err.textContent = '';
+    if (!ten) { err.textContent = '⚠ Nhập tên người được mời trước.'; return; }
+    var tong = chonTong();
+    var url = taoLink(ten, tong);
+    document.getElementById('tenHien').textContent = ten;
+    document.getElementById('tongHien').textContent = '· ' + tenTong(tong);
+    document.getElementById('linkOut').textContent = url;
+    document.getElementById('resultBox').classList.remove('hidden');
+    var arr = loadHistory();
+    if (arr.indexOf(ten) === -1) { arr.push(ten); try { localStorage.setItem(HISTORY_KEY, JSON.stringify(arr)); } catch (e) {} }
+    dsThemRecord(ten, tong);   // kh170: lưu record vào DANH SÁCH THIỆP MỜI
+    renderHistory();
+  });
+  document.getElementById('btnCopy').addEventListener('click', function () {
+    copyLink(document.getElementById('linkOut').textContent, document.getElementById('btnCopy'));
+  });
+  document.getElementById('btnOpen').addEventListener('click', function () {
+    window.open(document.getElementById('linkOut').textContent, '_blank');
+  });
+
+  /* ═══ kh170 (Đại Ka): DANH SÁCH THIỆP MỜI — liệt kê tên + link, nút 📋 sao chép,
+	     nút XOÁ CÓ BƯỚC XÁC NHẬN. Nguồn: localStorage (web tĩnh không backend —
+	     record {ten, tong, link, thoiGian} chỉ lưu trên máy admin tạo link;
+	     link tạo TRƯỚC kh170 không nằm trong danh sách). ═══ */
+  var DS_KEY = 'tc_danh_sach_thiep';
+
+  function dsLoad() {
+    try { return JSON.parse(localStorage.getItem(DS_KEY)) || []; }
+    catch (e) { return []; }
+  }
+  function dsSave(arr) {
+    try { localStorage.setItem(DS_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+  function dsThemRecord(ten, tong) {
+    var arr = dsLoad();
+    if (!arr.some(function (r) { return r.ten === ten && r.tong === tong; })) {
+      arr.push({ ten: ten, tong: tong, link: taoLink(ten, tong), thoiGian: new Date().toISOString() });
+      dsSave(arr);
+    }
+  }
+  function dsXoa(idx) {
+    var arr = dsLoad();
+    if (idx >= 0 && idx < arr.length) { arr.splice(idx, 1); dsSave(arr); }
+  }
+
+  function renderDs() {
+    var overlay = document.getElementById('dsOverlay');
+    var list = document.getElementById('dsList');
+    var arr = dsLoad();
+    list.innerHTML = '';
+    if (!arr.length) {
+      var empty = document.createElement('p');
+      empty.className = 'ds-empty';
+      empty.textContent = 'Chưa có thiệp mời nào trong danh sách.';
+      list.appendChild(empty);
+      return;
+    }
+    arr.forEach(function (r, i) {
+      var item = document.createElement('div');
+      item.className = 'ds-item';
+
+      var head = document.createElement('div');
+      var tenB = document.createElement('span');
+      tenB.className = 'ds-ten';
+      tenB.textContent = r.ten;
+      head.appendChild(tenB);
+      if (r.tong) {
+        var tongSpan = document.createElement('span');
+        tongSpan.className = 'ds-tong';
+        tongSpan.textContent = '· ' + (tenTong(r.tong) || r.tong);
+        head.appendChild(tongSpan);
+      }
+      item.appendChild(head);
+
+      var link = document.createElement('div');
+      link.className = 'ds-link';
+      link.textContent = r.link || taoLink(r.ten, r.tong);
+      item.appendChild(link);
+
+      var btns = document.createElement('div');
+      btns.className = 'ds-btns';
+
+      var btnCopy = document.createElement('button');
+      btnCopy.type = 'button';
+      btnCopy.textContent = '📋 Sao chép link';
+      btnCopy.addEventListener('click', function () {
+        copyLink(r.link || taoLink(r.ten, r.tong), btnCopy);
+      });
+      btns.appendChild(btnCopy);
+
+      var btnXoa = document.createElement('button');
+      btnXoa.type = 'button';
+      btnXoa.className = 'btn-xoa';
+      btnXoa.textContent = '🗑 Xoá';
+      btnXoa.addEventListener('click', function () {
+        // nút Xoá → hiện bước XÁC NHẬN inline (KHÔNG xoá ngay 1 click)
+        var cf = document.createElement('div');
+        cf.className = 'ds-confirm';
+        var t = document.createElement('p');
+        t.className = 'ds-confirm-text';
+        t.textContent = 'Xoá thiệp của "' + r.ten + '"?';
+        cf.appendChild(t);
+        var row = document.createElement('div');
+        row.className = 'ds-btns';
+        var yes = document.createElement('button');
+        yes.type = 'button';
+        yes.className = 'btn-xoa';
+        yes.textContent = '✓ Xác nhận xoá';
+        yes.addEventListener('click', function () {
+          dsXoa(i);
+          renderDs();
+        });
+        var no = document.createElement('button');
+        no.type = 'button';
+        no.className = 'btn-huy';
+        no.textContent = '✕ Hủy';
+        no.addEventListener('click', function () {
+          cf.remove();
+          btnXoa.classList.remove('hidden');
+        });
+        row.appendChild(yes);
+        row.appendChild(no);
+        cf.appendChild(row);
+        item.appendChild(cf);
+        btnXoa.classList.add('hidden');
+      });
+      btns.appendChild(btnXoa);
+
+      item.appendChild(btns);
+      list.appendChild(item);
+    });
+  }
+
+  document.getElementById('btnDanhSach').addEventListener('click', function () {
+    renderDs();
+    document.getElementById('dsOverlay').classList.remove('hidden');
+  });
+  document.getElementById('dsClose').addEventListener('click', function () {
+    document.getElementById('dsOverlay').classList.add('hidden');
+  });
+  // bấm nền tối ngoài card cũng đóng
+  document.getElementById('dsOverlay').addEventListener('click', function (e) {
+    if (e.target === this) this.classList.add('hidden');
+  });
+
+  // đã login trong session này → vào thẳng form
+  var logged = false;
+  try { logged = sessionStorage.getItem(SS_KEY) === '1'; } catch (e) {}
+  if (logged) showMain();
+  renderHistory();
+})();
+</script>
+</body>
+</html>

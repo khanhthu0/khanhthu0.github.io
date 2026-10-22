@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thiệp mời cưới</title>
+<meta name="description" content="Thiệp mời cưới online — trân trọng kính mời bạn đến dự lễ cưới của Nông Quốc Khánh & Đỗ Thị Thư">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ══════════════ 1. COVER — phong bì mở thiệp (kh118) ══════════════ -->
+<div id="cover">
+  <div class="cover-bg"></div>
+  <div class="cover-inner">
+    <p class="cover-kieu">THIỆP MỜI CƯỚI</p>
+    <div class="cover-names">
+      <span class="cover-name">Quốc Khánh</span>
+      <span class="cover-amp">♥</span>
+      <span class="cover-name">Thư Đỗ</span>
+    </div>
+    <p class="cover-date" id="coverDate">22 · 11 · 2026</p>
+    <!-- kh155 mục 1: "Trân trọng kính mời: <tên khách>" CHUYỂN LÊN TRÊN thiệp (ngay dưới dòng
+         ngày cưới) — thay chỗ dòng dưới phong bì (kh129 mục 4 cũ) theo yêu cầu Đại Ka -->
+    <p class="env-hint env-hint-top">Trân trọng kính mời: <b id="guestName">Bạn thân mến</b></p>
+
+    <!-- kh129: trái tim = NÚT MỞ THIỆP (bấm tim), chữ cong nửa vòng cung quanh tim; BỎ nút "Mở thiệp" trên đỉnh -->
+    <div class="envelope" id="envEl">
+      <div class="env-flap"></div>
+      <div class="env-body"></div>
+      <!-- Chữ cong "Bấm vào đây để mở thiệp" nửa vòng cung ôm quanh trái tim (SVG textPath — kh129 mục 2)
+           Cung dưới kiểu huy hiệu: tâm cung = tâm tim, đầu chữ hướng vào tim; mũi tên nhỏ cuối cung -->
+      <svg class="env-curved" viewBox="0 0 220 140" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="envArcPath" d="M 40 70 A 70 70 0 0 0 180 70" fill="none"/>
+        </defs>
+        <text class="env-curved-text">
+          <textPath href="#envArcPath" startOffset="50%" text-anchor="middle">Bấm vào đây để mở thiệp</textPath>
+        </text>
+        <!-- Mũi tên nhỏ cuối cung, mũi theo tiếp tuyến chỉ về phía tim -->
+        <path class="env-curved-arrow" d="M 180 56 L 186 68 L 174 68 Z"/>
+      </svg>
+      <button class="env-seal" id="btnOpen" type="button" aria-label="Bấm vào trái tim để mở thiệp">♥</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ NỘI DUNG THIỆP (ẩn ban đầu) ══════════════ -->
+<main id="content" class="hidden" aria-hidden="true">
+
+  <!-- 2. TRANG ĐẦU — khối kính mời nổi bật ngay sau khi mở (kh118 + kh139: xxx tên khách + 2 khối NHÀ TRAI/NHÀ GÁI + lời ngỏ) -->
+  <section class="opening" id="opening">
+    <div class="opening-card">
+      <!-- kh144(4): sắp xếp lại trang đầu — TÊN cặp đôi → NGÀY cưới → TRÂN TRỌNG KÍNH MỜI + tên khách → 2 khối lễ -->
+      <p class="opening-script script">Khánh &amp; Thư</p>
+      <p class="opening-date" id="openDate">Chủ nhật, ngày 22 tháng 11 năm 2026</p>
+      <p class="opening-date-am" id="openDateAm">14.10.2026 Âm lịch</p>
+      <p class="opening-kimoi">TRÂN TRỌNG KÍNH MỜI</p>
+      <!-- kh144(1): XOÁ dòng "Nông Quốc Khánh ♥ Đỗ Thị Thư" (giữ tên khách ?ten=); kh139: dòng tên khách "xxx" -->
+      <p class="opening-guest" id="openGuest">Bạn thân mến</p>
+      <div class="opening-venue">
+        <p class="ov-label">LỄ THÀNH HÔN · NHÀ TRAI</p>
+        <p class="ov-addr" id="openVenue">Trại Lốt, xã Tam Tiến, tỉnh Bắc Ninh</p>
+      </div>
+      <div class="opening-venue">
+        <p class="ov-label">LỄ VU QUY · NHÀ GÁI</p>
+        <p class="ov-addr" id="openVenue2">Đồng Thép, xã Yên Thế, tỉnh Bắc Ninh</p>
+      </div>
+      <!-- kh139: LỜI NGỎ (nguyên văn Đại Ka) -->
+      <p class="opening-ngo" id="loiNgoText">Rất mong được sự hiện diện, góp mặt của quý vị đến tham dự lễ tổ chức và bữa cơm thân mật của chúng mình. Những lời kính chúc và tình cảm chân thành của quý vị sẽ là món quà ý nghĩa nhất, góp phần làm cho ngày trọng đại của chúng mình thêm trọn vẹn và ý nghĩa.</p>
+      <p class="opening-ngo-sign">Trân trọng kính mời !</p>
+    </div>
+  </section>
+
+  <!-- 3. HERO — tên cặp đôi -->
+  <section class="hero">
+    <div class="hero-photo">
+      <img src="images/hero/cap-doi-that.jpg" alt="Nông Quốc Khánh & Đỗ Thị Thư — ảnh cưới">
+    </div>
+    <div class="hero-text">
+      <p class="hero-sub">Chúng tôi tổ chức đám cưới</p>
+      <h1 class="hero-title">The Wedding Of</h1>
+      <p class="hero-names script">Khánh &amp; Thư</p>
+      <p class="hero-date" id="heroDate">Chủ nhật, ngày 22 tháng 11 năm 2026</p>
+    </div>
+  </section>
+
+  <!-- 4. SAVE THE DATE / COUNTDOWN (kh140 mục 2: "Ghi nhớ ngày này nhé") -->
+  <section class="countdown reveal">
+    <h2 class="sec-title">Ghi nhớ ngày này nhé</h2>
+    <p class="countdown-when" id="cdWhen">Chủ nhật · 22 · 11 · 2026</p>
+    <div id="countdownRow" class="countdown-row">
+      <div class="cd-cell"><b id="cdDays">00</b><span>Ngày</span></div>
+      <div class="cd-cell"><b id="cdHours">00</b><span>Giờ</span></div>
+      <div class="cd-cell"><b id="cdMins">00</b><span>Phút</span></div>
+      <div class="cd-cell"><b id="cdSecs">00</b><span>Giây</span></div>
+    </div>
+  </section>
+
+  <!-- 5. LỊCH THÁNG CƯỚI — dương + âm, trái tim đỏ ngày cưới (kh119 a2 mục 5; kh138: tháng 11/2026; kh140 mục 2+3) -->
+  <section class="calendar reveal" id="calendar">
+    <h2 class="sec-title">Ghi nhớ ngày này nhé</h2>
+    <div class="cal-wrap">
+      <div class="cal-head">
+        <button type="button" class="cal-nav" id="calPrev" aria-label="Tháng trước">‹</button>
+        <div class="cal-month">
+          <b id="calDuong">Tháng 11 · 2026</b>
+          <span id="calAm">(Tháng Mười · Bính Ngọ)</span>
+        </div>
+        <button type="button" class="cal-nav" id="calNext" aria-label="Tháng sau">›</button>
+      </div>
+      <div class="cal-weeknames">
+        <span>Hai</span><span>Ba</span><span>Tư</span><span>Năm</span><span>Sáu</span><span>Bảy</span><span>CN</span>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <p class="cal-note" id="calNote">Ngày cưới: 22 · 11 · 2026 (dương) — 14 · 10 · Bính Ngọ (âm)</p>
+    </div>
+  </section>
+
+  <!-- 6. CẶP ĐÔI — avatar v2 kh116 (#4) -->
+  <section class="couple reveal">
+    <h2 class="sec-title">Cặp Đôi</h2>
+    <div class="couple-cards">
+      <div class="couple-card">
+        <img src="images/couple/anh-ck.jpg" alt="Chú rể Nông Quốc Khánh">
+        <h3>Nông Quốc Khánh</h3>
+        <p class="couple-birth">Sinh ngày 05.10.1996</p>
+        <p class="couple-role">Chú rể</p>
+      </div>
+      <div class="couple-heart">♥</div>
+      <div class="couple-card">
+        <img src="images/couple/anh-vk.jpg" alt="Cô dâu Đỗ Thị Thư">
+        <h3>Đỗ Thị Thư</h3>
+        <p class="couple-birth">Sinh ngày 28.05.2000</p>
+        <p class="couple-role">Cô dâu</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. SỰ KIỆN — lễ vu quy (nhà gái) + lễ thành hôn (nhà trai) — data #5 (kh108) -->
+  <section class="events reveal" id="events">
+    <h2 class="sec-title">Thông Tin Sự Kiện</h2>
+
+    <div class="event-card">
+      <div class="event-head" id="evtHead1">Lễ Vu Quy — Nhà gái</div>
+      <img class="event-img" src="images/nen/nen-phong-bi.jpg" alt="Cảnh nền">
+      <p><b>Thời gian:</b> <span id="evtTime1">Chủ nhật, 09:00 · 22 · 11 · 2026</span></p>
+      <p><b>Địa chỉ:</b> <span id="evtAddr1">Đồng Thép, xã Yên Thế, tỉnh Bắc Ninh</span></p>
+      <p class="event-host" id="evtHost1">Chủ nhà: Ông Đỗ Văn Tường — Bà Nguyễn Thị Cửu</p>
+      <div class="event-map">
+        <iframe id="evtMap1" title="Bản đồ nhà gái"
+                loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen></iframe>
+      </div>
+      <div class="map-btns">
+        <a class="map-btn" id="evtPin1" target="_blank" rel="noopener">📍 Mở Google Maps</a>
+        <a class="map-btn map-btn-outline" id="evtDir1" target="_blank" rel="noopener">🧭 Chỉ đường</a>
+      </div>
+    </div>
+
+    <div class="event-card">
+      <div class="event-head" id="evtHead2">Lễ Thành Hôn — Nhà trai</div>
+      <img class="event-img" src="images/nen/nen-phong-bi.jpg" alt="Cảnh nền">
+      <p><b>Thời gian:</b> <span id="evtTime2">Chủ nhật, 09:00 · 22 · 11 · 2026</span></p>
+      <p><b>Địa chỉ:</b> <span id="evtAddr2">Trại Lốt, xã Tam Tiến, tỉnh Bắc Ninh</span></p>
+      <p class="event-host" id="evtHost2">Chủ nhà: Ông Nông Văn Chỉnh — Bà Nông Thị Thu</p>
+      <div class="event-map">
+        <iframe id="evtMap2" title="Bản đồ nhà trai"
+                loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen></iframe>
+      </div>
+      <div class="map-btns">
+        <a class="map-btn" id="evtPin2" target="_blank" rel="noopener">📍 Mở Google Maps</a>
+        <a class="map-btn map-btn-outline" id="evtDir2" target="_blank" rel="noopener">🧭 Chỉ đường</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. GALLERY (kh140 mục 10: "Album Ảnh Cưới" + 6 ảnh chính + nút xem thêm + BỎ dòng "— Khoảnh khắc của chúng tôi —") -->
+  <section class="gallery reveal">
+    <h2 class="sec-title">Album Ảnh Cưới</h2>
+    <div class="gallery-grid">
+      <!-- kh144 + kh143 #4: 6 ảnh CƯỚI THẬT mới (drive-download — đẹp hơn chibi) thay 6 ảnh chibi cũ;
+           ảnh chibi chuyển xuống lưới "Xem thêm" (cùng khung tài sản, không mất) -->
+      <img src="images/gallery/cuoi-that-1.jpg" alt="Khánh &amp; Thư — ảnh cưới thật">
+      <img src="images/gallery/cuoi-that-2.jpg" alt="Khánh &amp; Thư — ảnh cưới thật">
+      <img src="images/gallery/cuoi-that-3.jpg" alt="Khánh &amp; Thư — ảnh cưới thật">
+      <img src="images/gallery/cuoi-that-4.jpg" alt="Khánh &amp; Thư — ảnh cưới thật">
+      <img src="images/gallery/cuoi-that-5.jpg" alt="Khánh &amp; Thư — ảnh cưới thật">
+      <img src="images/gallery/cuoi-that-6.jpg" alt="Khánh &amp; Thư — ảnh cưới thật">
+    </div>
+    <!-- kh120 a2 mục 10 + kh140: nút xem thêm khoảnh khắc -->
+    <div class="gallery-more-wrap">
+      <button type="button" id="btnMorePhotos" class="gallery-more-btn">📷 Xem thêm khoảnh khắc</button>
+    </div>
+    <div class="gallery-grid more hidden" id="galleryMore">
+      <img src="images/gallery/le-ta-on.jpg" alt="Nền hoa cưới">
+      <img src="images/hero/cap-doi-that.jpg" alt="Nông Quốc Khánh &amp; Đỗ Thị Thư — cặp đôi">
+      <!-- kh144: 6 ảnh chibi cũ từ lưới chính chuyển xuống đây (chuyển xuống lưới Xem thêm — không mất) -->
+      <img src="images/gallery/cap-doi-1.jpg" alt="Khánh &amp; Thư — lễ phục">
+      <img src="images/gallery/cap-doi-2.jpg" alt="Khánh &amp; Thư — lễ phục mùa đông">
+      <img src="images/gallery/cap-doi-3.jpg" alt="Khánh &amp; Thư — hai học sinh">
+      <img src="images/gallery/cap-doi-4.jpg" alt="Khánh &amp; Thư — hai bé chibi">
+      <img src="images/gallery/cap-doi-5.jpg" alt="Khánh &amp; Thư — trên sofa">
+      <img src="images/gallery/co-dau.jpg" alt="Cô dâu Thư">
+      <img src="images/gallery/xem-them/an-11-khanh-thu.jpg" alt="Khánh &amp; Thư — cặp đôi sofa">
+      <img src="images/gallery/xem-them/capdoi-chibi.jpg" alt="Khánh &amp; Thư — cặp đôi chibi">
+      <img src="images/gallery/xem-them/capdoi-chibi-v2.jpg" alt="Khánh &amp; Thư — cặp đôi chibi mỉm cười">
+      <img src="images/gallery/xem-them/chibi-balo.jpg" alt="Khánh &amp; Thư — hai bé balo">
+      <img src="images/gallery/xem-them/hai-hoc-sinh.jpg" alt="Khánh &amp; Thư — hai học sinh">
+      <img src="images/gallery/xem-them/co-dau-tuoi.jpg" alt="Cô dâu Thư tuổi thơ">
+      <img src="images/gallery/xem-them/thu-ban-hoc.jpg" alt="Thư — bé gái bàn học">
+      <img src="images/gallery/xem-them/ky-chu-khanh-thu.jpg" alt="Khánh &amp; Thư — chữ ký">
+    </div>
+  </section>
+
+  <!-- LIGHTBOX — zoom ảnh (kh120 a2 mục 12) -->
+  <div id="lightbox" class="lightbox" hidden>
+    <div class="lb-backdrop"></div>
+    <img class="lb-img" id="lbImg" alt="Ảnh cưới phóng to">
+    <button type="button" class="lb-close" id="lbClose" aria-label="Đóng">✕</button>
+    <div class="lb-hint">Chạm ảnh để phóng to/thu nhỏ · ✕ hoặc chạm nền để đóng</div>
+  </div>
+
+  <!-- 9. QR MỪNG — tiền mừng — data + module QR của #5 (kh108) -->
+  <section class="qr reveal" id="qr">
+    <h2 class="sec-title">Món Quà Mừng Cưới</h2>
+    <p class="qr-intro">Nếu bạn không thể đến dự, xin gửi món quà mừng cưới qua tài khoản:</p>
+
+    <div class="qr-cards">
+      <!-- kh155 mục 4(b) — Đại Ka: "lần lượt mã QR và thông tin NHÀ GÁI rồi đến NHÀ TRAI"
+           → đổi thứ tự: card CÔ DÂU (nhà gái) TRƯỚC, card CHÚ RỂ (nhà trai) SAU (kh129 lật ngược) -->
+      <div class="qr-card">
+        <h3 id="qrTitle2">Cô dâu — Thư</h3>
+        <img class="qr-img" id="qrBride" alt="QR ngân hàng cô dâu" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAUwAOw==">
+        <p><b>Ngân hàng:</b> <span id="qrNh2">Vietcombank</span></p>
+        <p><b>Số TK:</b> <span id="qrStk2">0123456789</span></p>
+        <p><b>Chủ TK:</b> <span id="qrCtk2">DO THI THU</span></p>
+        <button type="button" class="qr-copy-btn" id="qrCopy2">⧉ Sao chép STK</button>
+      </div>
+      <div class="qr-card">
+        <h3 id="qrTitle1">Chú rể — Khánh</h3>
+        <img class="qr-img" id="qrGroom" alt="QR ngân hàng chú rể" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAUwAOw==">
+        <p><b>Ngân hàng:</b> <span id="qrNh1">MB Bank</span></p>
+        <p><b>Số TK:</b> <span id="qrStk1">0800123456789</span></p>
+        <p><b>Chủ TK:</b> <span id="qrCtk1">NONG QUOC KHANH</span></p>
+        <button type="button" class="qr-copy-btn" id="qrCopy1">⧉ Sao chép STK</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. RSVP + LỜI CHÚC -->
+  <section class="rsvp reveal">
+    <h2 class="sec-title">Xác Nhận Tham Dự</h2>
+    <p class="rsvp-intro">Sự hiện diện của bạn là niềm vinh hạnh của gia đình chúng tôi.</p>
+    <form id="rsvpForm">
+      <input type="text" id="rsvpName" placeholder="Tên của bạn" required>
+      <!-- kh120 a2 mục 9: lựa chọn khách mời của ai — hiện dưới tên -->
+      <div class="rsvp-side" id="rsvpSideBox">
+        <span class="rsvp-side-label">Khách mời của:</span>
+        <div class="rsvp-side-opts">
+          <label><input type="radio" name="side" value="Cô dâu" checked> Cô dâu</label>
+          <label><input type="radio" name="side" value="Chú rể"> Chú rể</label>
+          <label><input type="radio" name="side" value="Cả 2"> Cả 2</label>
+        </div>
+      </div>
+      <div class="rsvp-attend">
+        <label><input type="radio" name="attend" value="yes" checked> Tham dự</label>
+        <label><input type="radio" name="attend" value="no"> Không thể tham dự</label>
+      </div>
+      <textarea id="rsvpMsg" rows="3" placeholder="Lời chúc của bạn..."></textarea>
+      <button type="submit">Nhắn gửi yêu thương</button>
+    </form>
+    <div id="wishList" class="wish-list"></div>
+    <!-- kh140 mục 9: nút xem thêm lời chúc (hiện tối đa 3 lời chúc gần nhất) -->
+    <div class="wish-more-wrap" id="wishMoreWrap" hidden>
+      <button type="button" id="btnMoreWishes" class="gallery-more-btn">💌 Xem thêm lời chúc</button>
+    </div>
+  </section>
+
+  <!-- 11. FOOTER -->
+  <footer class="footer">
+    <p class="footer-thanks">Trân trọng cảm ơn!</p>
+    <p class="footer-names script">Khánh &amp; Thư</p>
+    <p class="footer-note" id="footerDate">22 · 11 · 2026</p>
+  </footer>
+
+</main>
+
+<!-- (kh140 mục 8: ĐẠI KA yêu cầu BỎ dòng "Còn N ngày đến ngày cưới..." →
+     thanh đếm ngược rìa #edgeCountdown đã XOÁ HẲN — không còn text hiển thị) -->
+
+<script src="js/noi-dung.js"></script>
+<script src="js/am-lich.js"></script>
+<script src="js/qr.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
